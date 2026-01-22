@@ -1,0 +1,265 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Dark futuristic design system */
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 4%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 0 0% 80%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --gradient-text: linear-gradient(
+      135deg,
+      hsl(195 100% 70%),
+      hsl(225 90% 65%),
+      hsl(265 85% 75%)
+    );
+    --gradient-glow: radial-gradient(
+      ellipse at center,
+      hsl(0 0% 100% / 0.15),
+      transparent 70%
+    );
+    --shadow-glow: 0 0 60px hsl(0 0% 100% / 0.1);
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Gradient text (Hero only) */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(195 100% 70%),
+      hsl(225 90% 65%),
+      hsl(265 85% 75%)
+    );
+  }
+
+  /* Loader */
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 3px solid hsl(0 0% 30%);
+    border-bottom-color: hsl(0 0% 98%);
+    border-radius: 50%;
+    display: inline-block;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Spotlight animation */
+  @keyframes spotlight {
+    0% {
+      opacity: 0;
+      transform: translate(-72%, -62%) scale(0.5);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -40%) scale(1);
+    }
+  }
+
+  .animate-spotlight {
+    animation: spotlight 2s ease 0.75s 1 forwards;
+  }
+
+  /* ===============================
+     Animated Resume Button (FIXED)
+     =============================== */
+
+  .resume-button {
+    --width: 110px;
+    --height: 40px;
+    --tooltip-height: 34px;
+    --tooltip-width: 90px;
+    --gap: 14px;
+
+    width: var(--width);
+    height: var(--height);
+    position: relative;
+    overflow: hidden; /* ✅ CRITICAL */
+
+    border-radius: 0.6rem;
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid hsl(var(--border));
+
+    color: hsl(var(--foreground));
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .resume-button:hover {
+    background: hsl(var(--card));
+    border-color: hsl(var(--primary) / 0.6);
+  }
+
+  /* Tooltip */
+  .resume-button::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    width: var(--tooltip-width);
+    height: var(--tooltip-height);
+    background: #fff;
+    color: #111;
+    font-size: 0.75rem;
+    line-height: var(--tooltip-height);
+    border-radius: 0.4rem;
+    bottom: calc(100% + var(--gap));
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+  }
+
+  .resume-button::after {
+    content: "";
+    position: absolute;
+    border: 8px solid transparent;
+    border-top-color: #fff;
+    bottom: calc(100% + var(--gap) - 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+  }
+
+  .resume-button:hover::before,
+  .resume-button:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Animation layers */
+  .resume-wrapper {
+    position: absolute;
+    inset: 0;
+    overflow: hidden; /* ✅ SECOND CLIP */
+  }
+
+  .resume-text,
+  .resume-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease;
+  }
+
+  .resume-icon {
+    transform: translateY(100%);
+  }
+
+  .resume-button:hover .resume-text {
+    transform: translateY(-100%);
+  }
+
+  .resume-button:hover .resume-icon {
+    transform: translateY(0);
+  }
+
+  /* Animated Navbar Links (Light Version) */
+
+.nav-link {
+  position: relative;
+  padding: 0.25rem 0;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.3s ease;
+}
+
+.nav-link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: hsl(var(--foreground));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+  color: hsl(var(--foreground));
+}
+
+.nav-link:hover::before {
+  transform: scaleX(1);
+}
+
+/* Active navbar link */
+.nav-link.active {
+  color: hsl(var(--foreground));
+}
+
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+
+
+
+}
